@@ -48,6 +48,7 @@ var
     position: integer;
     player: char;
 begin
+    randomize;
     turn := 0;
 
     for i := 0 to 8 do
@@ -56,19 +57,25 @@ begin
     repeat
         clrscr;
         drawBoard(board);
+
         if turn mod 2 = 0 then
-            player := chr(88)
+            begin
+                player := chr(88);
+                writeln('Player ', player, ', enter your move (0-8): ');
+                readln(position);
+                if (position < 0) or (position > 8) or (board[position] = 'X') or (board[position] = 'O') then
+                begin
+                    writeln('Invalid move! Try again.');
+                    continue;
+                end;
+            end
         else
-            player := chr(79);
-
-        writeln('Player ', player, ', enter your move (0-8): ');
-        readln(position);
-
-        if (position < 0) or (position > 8) or (board[position] = 'X') or (board[position] = 'O') then
-        begin
-            writeln('Invalid move! Try again.');
-            continue;
-        end;
+            begin
+                player := chr(79);
+                position := random(9);
+                while (board[position] = 'X') or (board[position] = 'O') do
+                    position := random(9);
+            end;
 
         board[position] := player;
 
