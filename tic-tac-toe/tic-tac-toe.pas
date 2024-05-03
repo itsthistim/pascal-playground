@@ -1,6 +1,10 @@
 program TicTacToe;
 uses Crt;
 
+const
+    PLAYER_X = 'X';
+    PLAYER_O = 'O';
+
 procedure drawBoard(board: array of char);
 begin
     writeln(' ', board[0], ' | ', board[1], ' | ', board[2]);
@@ -40,6 +44,36 @@ begin
     exit(false);
 end;
 
+function chooseMove(board: array of char): integer;
+var
+    position: integer;
+begin
+    // find winning move, if none available, block opponent's winning move, if none available, choose random move
+    for position := 0 to 8 do
+    begin
+        if board[position] = ' ' then
+        begin
+            // check if move is winning
+            board[position] := PLAYER_O;
+            if checkWin(board) then
+            begin
+                board[position] := ' ';
+                exit(position);
+            end;
+            // check if move is blocking
+            board[position] := PLAYER_X;
+            if checkWin(board) then
+            begin
+                board[position] := ' ';
+                exit(position);
+            end;
+            // reset board
+            board[position] := ' ';
+        end;
+    end;
+    exit (random(9));
+end;
+
 type
     ch_array = array[0..8] of char;
 var
@@ -60,10 +94,10 @@ begin
 
         if turn mod 2 = 0 then
             begin
-                player := chr(88);
+                player := PLAYER_X;
                 writeln('Player ', player, ', enter your move (0-8): ');
                 readln(position);
-                if (position < 0) or (position > 8) or (board[position] = 'X') or (board[position] = 'O') then
+                if (position < 0) or (position > 8) or (board[position] = PLAYER_X) or (board[position] = PLAYER_O) then
                 begin
                     writeln('Invalid move! Try again.');
                     continue;
@@ -71,10 +105,8 @@ begin
             end
         else
             begin
-                player := chr(79);
-                position := random(9);
-                while (board[position] = 'X') or (board[position] = 'O') do
-                    position := random(9);
+                player := PLAYER_O;
+                position := chooseMove(board);
             end;
 
         board[position] := player;
