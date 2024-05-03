@@ -48,7 +48,6 @@ function chooseMove(board: array of char): integer;
 var
     position: integer;
 begin
-    // find winning move, if none available, block opponent's winning move, if none available, choose random move
     for position := 0 to 8 do
     begin
         if board[position] = ' ' then
@@ -92,7 +91,7 @@ begin
         clrscr;
         drawBoard(board);
 
-        if turn mod 2 = 0 then
+        if turn mod 2 = 0 then // player X
             begin
                 player := PLAYER_X;
                 writeln('Player ', player, ', enter your move (0-8): ');
@@ -103,7 +102,7 @@ begin
                     continue;
                 end;
             end
-        else
+        else // player O
             begin
                 player := PLAYER_O;
                 position := chooseMove(board);
